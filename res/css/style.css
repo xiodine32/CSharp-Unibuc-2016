@@ -1,0 +1,20 @@
+.alert-block {
+    display: block;
+}
+.a-disable {
+    color: inherit !important;
+    text-decoration: none !important;
+}
+.jumbotron.boom {
+    margin-top: -20px;
+    background-image: url('../img/Background.png');
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: left -200px;
+    color: #fff;
+    text-shadow: 1px 1px 3px #000;
+}
+
+.no-resize {
+    resize: none;
+}

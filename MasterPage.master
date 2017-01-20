@@ -1,0 +1,126 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="MasterPage.master.cs" Inherits="MasterPage" %>
+<%@ Import Namespace="System.Data" %>
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head runat="server">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title><%= string.IsNullOrEmpty(Page.Title) ? "" : Page.Title + " | " %>EDM's up?</title>
+
+    <link href="/res/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/res/css/font-awesome.min.css">
+    <link href="/res/css/style.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <asp:ContentPlaceHolder id="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/Default.aspx">EDM's up?</a>
+        </div>
+        
+        <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:DefaultConnection %>" ProviderName="<%$ ConnectionStrings:DefaultConnection.ProviderName %>" SelectCommand="SELECT Categories.* FROM Categories"></asp:SqlDataSource>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li class="<%= Page.Title == "" ? "active" : "" %>">
+                    <a href="/Default.aspx">Home</a>
+                </li>
+                    
+                    <%
+                        var items = SqlDataSource1.Select(DataSourceSelectArguments.Empty) ?? new ArrayList();
+                        foreach (DataRowView item in items)
+                        { %>
+                        <li><a href="/?category=<%= item.Row[0] %>"><%= item.Row[1] %></a></li>
+                    <% } %>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                <% if (HttpContext.Current.User.Identity.IsAuthenticated)
+                   { %>
+                    <li class="<%= Page.Title == "New Idea" ? "active" : "" %>">
+                        <a href="/NewIdea.aspx"><i class="fa fa-lightbulb-o"></i> New Idea</a>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user"></i>&nbsp;<%= HttpContext.Current.User.Identity.Name %></a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="EditPosts.aspx"><i class="fa fa-address-book"></i> Edit Posts</a>
+                            </li>
+                            <li>
+                                <a href="EditUsers.aspx"><i class="fa fa-users"></i> Edit Users</a>
+                            </li>
+                            <li>
+                                <a href="EditCategories.aspx"><i class="fa fa-list"></i> Edit Categories</a>
+                            </li>
+                            <li>
+                                <a href="Ideas.aspx"><i class="fa fa-envelope"></i> Ideas</a>
+                            </li>
+                            <li role="separator" class="divider"></li>
+                            <li>
+                                <a href="/Logout.aspx"><i class="fa fa-sign-out"></i> Logout</a>
+                            </li>
+                        </ul>
+                    </li>
+                <% }
+                   else
+                   { %>
+                    <li class="<%= Page.Title == "Login" ? "active" : "" %>">
+                        <a href="/Login.aspx"><i class="fa fa-sign-in"></i> Login</a>
+                    </li>
+                <% } %>
+            </ul>
+            <form class="navbar-form navbar-right" method="get" action="/Search.aspx">
+                <div class="form-group">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Dubstep" name="query" value="<%= Request.QueryString["query"] %>">
+                        <span class="input-group-btn">
+                            <button type="submit" class="btn btn-default"><i class="fa fa-search"></i><span class="sr-only">Search</span></button>
+                        </span>
+                    </div>
+                </div>
+
+            </form>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+<div class="jumbotron boom">
+    <div class="container">
+        <h1>EDM's up?</h1>
+        <h2>Your one stop shop for newest EDM articles!</h2>
+    </div>
+</div>
+<asp:ContentPlaceHolder id="Body" runat="server">
+
+</asp:ContentPlaceHolder>
+<footer class="container text-center" style="color: #888; font-weight: bold;">
+    <hr/>
+    <div>Made with love - Copyright &copy; 2017 - <a href="https://xio.ro">xio.ro</a>
+    </div>
+</footer>
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="/res/js/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="/res/js/bootstrap.min.js"></script>
+<asp:ContentPlaceHolder id="Scripts" runat="server">
+
+</asp:ContentPlaceHolder>
+</body>
+</html>
